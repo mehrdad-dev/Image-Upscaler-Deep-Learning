@@ -1,4 +1,4 @@
-# Free Image Upscaler Using Deep Learning 📸
+# Free Image Upscaler Using Deep Learning (AI) 📸
 
 A simple interface to upscale your images using deep learning (AI). 
 In streamlit, there is a shortage in terms of CPU, to solve this issue use codes in GitHub on your own device or use another scale twice.
