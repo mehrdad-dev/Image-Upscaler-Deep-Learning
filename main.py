@@ -7,10 +7,10 @@ from datetime import datetime
 ############################# start - variables ################################
 sr = cv2.dnn_superres.DnnSuperResImpl_create()
 
-models_2x = ['EDSR_x2.pb']
-models_3x = ['a']
-models_4x = ['EDSR_x4.pb', 'LapSRN_x4.pb']
-models_8x = ['a']
+models_2x = ['EDSR_x2.pb', 'ESPCN_x2.pb', 'FSRCNN-small_x2.pb', 'FSRCNN_x2.pb', 'LapSRN_x2.pb']
+models_3x = ['EDSR_x3.pb', 'ESPCN_x3.pb', 'FSRCNN-small_x3.pb', 'FSRCNN_x3.pb']
+models_4x = ['EDSR_x4.pb', 'ESPCN_x4.pb', 'FSRCNN-small_x4.pb', 'FSRCNN_x4.pb', 'LapSRN_x4.pb']
+models_8x = ['LapSRN_x8.pb']
 
 BASE_PATH = 'models/'
 
@@ -33,6 +33,12 @@ def get_modelname(selected_model: str) -> str:
         return 'edsr'
     elif 'LapSRN' in selected_model:
         return 'lapsrn'
+    elif 'ESPCN' in selected_model:
+        return 'espcn'
+    elif 'FSRCNN' in selected_model:
+        return 'fsrcnn'
+    elif 'LapSRN' in selected_model:
+        return 'lapsrn'
 
 
 def model_selector(scale: str) -> str:
@@ -40,19 +46,20 @@ def model_selector(scale: str) -> str:
     if scale == '2x':
         model = st.selectbox(
             'Which model do you want to use?',
-            ('Not selected', models_2x[0], models_2x[0]))
+            ('Not selected', models_2x[0], models_2x[1], models_2x[2], models_2x[3], 
+            models_2x[4]))
     elif scale == '3x':
         model = st.selectbox(
             'Which model do you want to use?',
-            ('Not selected', models_3x[0], models_3x[0]))
+            ('Not selected', models_3x[0], models_3x[1], models_3x[2], models_3x[3]))
     elif scale == '4x':
         model = st.selectbox(
             'Which model do you want to use?',
-            ('Not selected', models_4x[0], models_4x[1]))
+            ('Not selected', models_4x[0], models_4x[1], models_4x[2], models_4x[3], models_4x[4]))
     elif scale == '8x':
         model = st.selectbox(
             'Which model do you want to use?',
-            ('Not selected', models_8x[0], models_8x[0]))
+            ('Not selected', models_8x[0]))
     else:
         return False, False
 
@@ -62,18 +69,18 @@ def model_selector(scale: str) -> str:
 
 ############################# start - Streamlit ################################
 
-st.title('Free image upscaler using deep learning')
+st.title('Free Image Upscaler Using Deep Learning 📸')
 st.markdown(
     'By [Mehrdad Mohammadian](https://mehrdad-dev.github.io)', unsafe_allow_html=True)
 
 about = """
-This demo provides a simple interface to upscale your images using deep learning. 
-In streamlit, there is some shortages in terms of CPU, to solve this issue use codes in GitHub on your own device.
+This demo provides a simple interface to upscale your images using deep learning (AI). 
+In streamlit, there is a shortage in terms of CPU, to solve this issue use codes in GitHub on your own device.
 """
 st.markdown(about, unsafe_allow_html=True)
 
 scale = st.selectbox(
-    'Which scale do you want to apply to on your image?',
+    'Which scale do you want to apply to your image?',
     ('Not selected', '2x', '3x', '4x', '8x'))
 
 
@@ -99,7 +106,7 @@ if uploaded_file is not None:
         st.info('Processing ...')
         result, save_path = upscale(
             model_path, model_name, scale, image, uploaded_file.type)
-        st.success('Image is ready, you can download it!')
+        st.success('Image is ready, you can download it now!')
         st.balloons()
         st.image(result, channels="RGB", caption='Your upscaled image')
         with open(save_path, 'rb') as f:
