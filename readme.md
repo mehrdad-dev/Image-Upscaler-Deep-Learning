@@ -11,7 +11,13 @@ https://mehrdad-dev-image-upscaler-deep-learning-streamlit-app-b16947.streamlit.
 **Note:** If you see a error like "Oh, no - Error running app", it is because CPU shortage in streamlit. to solve this issue use codes in GitHub on your own device or use another scale twice.
 
 
-
+# Local machine
+1. clone this repo
+2. Install requirements.txt
+3. and then run demo with this command:
+```
+python3 -m streamlit run streamlit_app.py 
+```
 
 # Models
 1. EDSR - [Paper](https://arxiv.org/pdf/1707.02921.pdf)
