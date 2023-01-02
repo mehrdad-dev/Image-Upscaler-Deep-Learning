@@ -1,10 +1,16 @@
 # Free Image Upscaler Using Deep Learning 📸
 
 A simple interface to upscale your images using deep learning (AI). 
-In streamlit, there is a shortage in terms of CPU, to solve this issue use codes in GitHub on your own device.
+In streamlit, there is a shortage in terms of CPU, to solve this issue use codes in GitHub on your own device or use another scale twice.
 
 
 # Demo
+https://mehrdad-dev-image-upscaler-deep-learning-streamlit-app-b16947.streamlit.app/
+
+
+**Note:** If you see a error like "Oh, no - Error running app", it is because CPU shortage in streamlit. to solve this issue use codes in GitHub on your own device or use another scale twice.
+
+
 
 
 # Models
