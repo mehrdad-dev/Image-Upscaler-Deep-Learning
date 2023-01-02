@@ -7,13 +7,15 @@ from datetime import datetime
 ############################# start - variables ################################
 sr = cv2.dnn_superres.DnnSuperResImpl_create()
 
-models_2x = ['EDSR_x2.pb', 'ESPCN_x2.pb', 'FSRCNN-small_x2.pb', 'FSRCNN_x2.pb', 'LapSRN_x2.pb']
+models_2x = ['EDSR_x2.pb', 'ESPCN_x2.pb',
+             'FSRCNN-small_x2.pb', 'FSRCNN_x2.pb', 'LapSRN_x2.pb']
 models_3x = ['EDSR_x3.pb', 'ESPCN_x3.pb', 'FSRCNN-small_x3.pb', 'FSRCNN_x3.pb']
-models_4x = ['EDSR_x4.pb', 'ESPCN_x4.pb', 'FSRCNN-small_x4.pb', 'FSRCNN_x4.pb', 'LapSRN_x4.pb']
+models_4x = ['EDSR_x4.pb', 'ESPCN_x4.pb',
+             'FSRCNN-small_x4.pb', 'FSRCNN_x4.pb', 'LapSRN_x4.pb']
 models_8x = ['LapSRN_x8.pb']
 
 BASE_PATH = 'models/'
-
+STREAMLIT = True # change it to False if you are running in your local machine.
 
 ############################# start - functions ################################
 
@@ -46,8 +48,8 @@ def model_selector(scale: str) -> str:
     if scale == '2x':
         model = st.selectbox(
             'Which model do you want to use?',
-            ('Not selected', models_2x[0], models_2x[1], models_2x[2], models_2x[3], 
-            models_2x[4]))
+            ('Not selected', models_2x[0], models_2x[1], models_2x[2], models_2x[3],
+             models_2x[4]))
     elif scale == '3x':
         model = st.selectbox(
             'Which model do you want to use?',
@@ -75,7 +77,11 @@ st.markdown(
 
 about = """
 This demo provides a simple interface to upscale your images using deep learning (AI). 
-In streamlit, there is a shortage in terms of CPU, to solve this issue use codes in GitHub on your own device.
+In streamlit, there is a shortage in terms of CPU, to solve this issue use codes in 
+GitHub on your own device or use another scale twice.
+
+
+**Note:** If you see a error like "Oh, no - Error running app", it is because CPU shortage in streamlit.
 """
 st.markdown(about, unsafe_allow_html=True)
 
@@ -98,16 +104,34 @@ if uploaded_file is not None:
     image = cv2.imdecode(file_bytes, 1)
     st.image(image, channels="BGR", caption='Your uploaded image')
 
-    left_column, right_column = st.columns(2)
-    pressed = left_column.button('Upscale!')
+    if scale == '8x' and image.shape[0] <= 128 and STREAMLIT==True:
+        st.error("Your image for the 8x scale is too big, because there is a shortage \
+             in terms of CPU, to solve this issue use GitHub codes on your own device or \
+            **plseae select another image or use another scale twice.**")
+    elif scale == '4x' and image.shape[0] <= 200 and STREAMLIT==True:
+        st.error("Your image for the 4x scale is too big, because there is a shortage \
+             in terms of CPU, to solve this issue use GitHub codes on your own device or \
+            **plseae select another image or use another scale twice.**")  
+    elif scale == '3x' and image.shape[0] <= 540 and STREAMLIT==True:
+        st.error("Your image for the 3x scale is too big, because there is a shortage \
+             in terms of CPU, to solve this issue use GitHub codes on your own device or \
+            **plseae select another image or use another scale twice.**")    
+    elif scale == '2x' and image.shape[0] <= 550 and STREAMLIT==True:
+        st.error("Your image for the 3x scale is too big, because there is a shortage \
+             in terms of CPU, to solve this issue use GitHub codes on your own device or \
+            **plseae select another image or use another scale twice.**")                                       
+    else:
+        left_column, right_column = st.columns(2)
+        pressed = left_column.button('Upscale!')
 
-    if pressed:
-        pressed = False
-        st.info('Processing ...')
-        result, save_path = upscale(
-            model_path, model_name, scale, image, uploaded_file.type)
-        st.success('Image is ready, you can download it now!')
-        st.balloons()
-        st.image(result, channels="RGB", caption='Your upscaled image')
-        with open(save_path, 'rb') as f:
-            st.download_button('Download the image', f, file_name=scale + '_' + str(datetime.now()) + '_' + save_path)
+        if pressed:
+            pressed = False
+            st.info('Processing ...')
+            result, save_path = upscale(
+                model_path, model_name, scale, image, uploaded_file.type)
+            st.success('Image is ready, you can download it now!')
+            st.balloons()
+            st.image(result, channels="RGB", caption='Your upscaled image')
+            with open(save_path, 'rb') as f:
+                st.download_button('Download the image', f, file_name=scale +
+                                   '_' + str(datetime.now()) + '_' + save_path)
